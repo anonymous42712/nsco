@@ -3,177 +3,741 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>HaCham - Jewish Knowledge AI</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Frank+Ruhl+Libre:wght@300;400;500;700&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,400&display=swap" rel="stylesheet">
+<title>nsco.dev — tech talk, no fluff</title>
 <style>
-* { box-sizing: border-box; margin: 0; padding: 0; }
-html, body { height: 100%; width: 100%; overflow: hidden; }
-body { background: #0d0500; font-family: 'Crimson Pro', serif; display: flex; flex-direction: column; }
-#app { display: flex; flex-direction: column; height: 100vh; width: 100%; }
-#header { background: #0a0300; padding: 1rem 1.8rem; display: flex; align-items: center; gap: 14px; border-bottom: 2px solid #c8922a; flex-shrink: 0; }
-#header-text h1 { font-family: 'Frank Ruhl Libre', serif; font-size: 20px; font-weight: 700; color: #f2d27a; letter-spacing: 0.02em; }
-#header-text p { font-size: 13px; color: #a07840; font-style: italic; }
-#chat-area { flex: 1; overflow-y: auto; padding: 1.5rem 2rem; display: flex; flex-direction: column; gap: 16px; background: #0f0800; }
-#chat-area::-webkit-scrollbar { width: 4px; }
-#chat-area::-webkit-scrollbar-thumb { background: #c8922a44; border-radius: 2px; }
-.msg { display: flex; gap: 10px; align-items: flex-start; animation: fadeUp 0.28s ease; }
-.msg.user { flex-direction: row-reverse; align-self: flex-end; max-width: 72%; }
-.msg.ai { align-self: flex-start; max-width: 78%; }
-@keyframes fadeUp { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
-.avatar { width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 15px; flex-shrink: 0; margin-top: 2px; }
-.avatar.ai { background: #1a0a00; border: 1.5px solid #c8922a; color: #c8922a; }
-.avatar.user { background: #2a1500; border: 1px solid #c8922a55; font-size: 11px; font-weight: 600; color: #a07840; }
-.bubble { padding: 11px 15px; border-radius: 14px; font-size: 16px; line-height: 1.72; }
-.bubble.ai { background: #1a0f02; border: 0.5px solid #c8922a33; color: #e8d8b0; border-top-left-radius: 4px; }
-.bubble.user { background: #2a1200; color: #f2d27a; border: 0.5px solid #c8922a55; border-top-right-radius: 4px; }
-.bubble em { color: #c8922a; font-style: italic; }
-.bubble strong { color: #f2d27a; font-weight: 600; }
-.typing { display: flex; align-items: center; gap: 5px; padding: 12px 15px; }
-.dot { width: 7px; height: 7px; border-radius: 50%; background: #c8922a; animation: bounce 1.2s infinite; }
-.dot:nth-child(2) { animation-delay: 0.2s; }
-.dot:nth-child(3) { animation-delay: 0.4s; }
-@keyframes bounce { 0%, 60%, 100% { transform: translateY(0); opacity: 0.4; } 30% { transform: translateY(-6px); opacity: 1; } }
-#bottom { flex-shrink: 0; background: #0a0300; border-top: 1px solid #c8922a22; }
-#suggestions { padding: 0.65rem 1.8rem; display: flex; gap: 7px; flex-wrap: wrap; border-bottom: 0.5px solid #c8922a15; }
-.chip { font-family: 'Crimson Pro', serif; font-size: 13px; padding: 5px 12px; border-radius: 20px; border: 0.5px solid #c8922a44; background: transparent; color: #a07840; cursor: pointer; transition: all 0.15s; white-space: nowrap; }
-.chip:hover { background: #2a1200; border-color: #c8922a; color: #f2d27a; }
-#input-row { padding: 0.9rem 1.8rem; display: flex; gap: 10px; align-items: flex-end; }
-#user-input { flex: 1; font-family: 'Crimson Pro', serif; font-size: 15.5px; border: 0.5px solid #c8922a44; border-radius: 10px; padding: 9px 14px; resize: none; min-height: 42px; max-height: 120px; overflow-y: auto; background: #1a0f02; color: #e8d8b0; outline: none; line-height: 1.5; }
-#user-input::placeholder { color: #6a4a20; }
-#user-input:focus { border-color: #c8922a; }
-#send-btn { width: 42px; height: 42px; border-radius: 50%; background: #c8922a; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; flex-shrink: 0; transition: all 0.15s; }
-#send-btn:hover { background: #e0a030; }
-#send-btn:disabled { opacity: 0.35; cursor: default; }
-#footer-note { text-align: center; padding: 0.35rem; font-size: 11px; color: #5a3a10; font-style: italic; }
+  @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=IBM+Plex+Sans:wght@400;500;600&display=swap');
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { height: 100%; }
+  body { font-family: 'IBM Plex Sans', sans-serif; background: #111113; color: #b0b8c1; font-size: 13px; }
+  .mono { font-family: 'JetBrains Mono', monospace; }
+
+  /* TOPBAR */
+  .topbar { background: #0c0c0e; border-bottom: 1px solid #1d1f23; padding: 5px 14px; display: flex; align-items: center; justify-content: space-between; font-family: 'JetBrains Mono', monospace; font-size: 10px; color: #3a3d42; }
+  .g { color: #4caf74; }
+
+  /* HEADER */
+  .hdr { background: #0c0c0e; border-bottom: 1px solid #1d1f23; padding: 10px 14px; display: flex; align-items: center; gap: 10px; }
+  .logo { font-family: 'JetBrains Mono', monospace; font-size: 17px; font-weight: 700; color: #e2e8f0; letter-spacing: -1px; cursor: pointer; }
+  .logo span { color: #5b8dee; }
+  .tagline { font-size: 10px; color: #3a3d42; margin-top: 1px; font-family: 'JetBrains Mono', monospace; }
+  .hdr-r { margin-left: auto; display: flex; gap: 6px; align-items: center; }
+  .btn-s { font-size: 11px; color: #5b8dee; cursor: pointer; padding: 4px 10px; border: 1px solid #1d2a3a; border-radius: 4px; background: transparent; font-family: 'JetBrains Mono', monospace; transition: background 0.15s; }
+  .btn-s:hover { background: #1a2030; }
+  .btn-accent { font-size: 11px; color: #0c0c0e; cursor: pointer; padding: 4px 10px; border: 1px solid #5b8dee; border-radius: 4px; background: #5b8dee; font-family: 'JetBrains Mono', monospace; font-weight: 600; }
+  .btn-accent:hover { background: #4a7cdd; }
+
+  /* NAV */
+  .nav { background: #0c0c0e; border-bottom: 1px solid #1d1f23; padding: 0 14px; display: flex; }
+  .nt { padding: 8px 14px; font-size: 11px; color: #4a5260; cursor: pointer; border-bottom: 2px solid transparent; white-space: nowrap; font-family: 'JetBrains Mono', monospace; transition: color 0.1s; }
+  .nt:hover { color: #8a9ab0; }
+  .nt.a { color: #5b8dee; border-bottom-color: #5b8dee; }
+
+  /* STATS */
+  .sbr { display: grid; grid-template-columns: repeat(4,1fr); gap: 1px; background: #1d1f23; }
+  .sb { background: #0c0c0e; padding: 8px 12px; text-align: center; }
+  .sn { font-size: 14px; font-weight: 700; color: #5b8dee; font-family: 'JetBrains Mono', monospace; }
+  .sl { font-size: 9px; color: #3a3d42; margin-top: 2px; text-transform: uppercase; letter-spacing: 0.5px; }
+
+  /* LAYOUT */
+  .main { display: grid; grid-template-columns: 1fr 190px; min-height: calc(100vh - 160px); }
+  .feed { border-right: 1px solid #1d1f23; }
+  .feed-hdr { padding: 7px 14px; border-bottom: 1px solid #1d1f23; display: flex; align-items: center; gap: 2px; background: #0e1012; justify-content: space-between; }
+  .fh-tabs { display: flex; gap: 2px; }
+  .fh { font-size: 11px; color: #3a3d42; padding: 4px 9px; cursor: pointer; border-radius: 3px; font-family: 'JetBrains Mono', monospace; transition: color 0.1s; }
+  .fh:hover { color: #8a9ab0; }
+  .fh.a { background: #1d2530; color: #5b8dee; }
+  .new-post-btn { font-size: 10px; color: #3a3d42; padding: 4px 9px; cursor: pointer; border-radius: 3px; font-family: 'JetBrains Mono', monospace; border: 1px dashed #1d1f23; transition: all 0.15s; }
+  .new-post-btn:hover { border-color: #5b8dee; color: #5b8dee; }
+
+  /* POSTS */
+  .post { border-bottom: 1px solid #191b1f; padding: 11px 14px; cursor: pointer; transition: background 0.1s; display: flex; gap: 10px; }
+  .post:hover { background: #13151a; }
+  .votes { display: flex; flex-direction: column; align-items: center; gap: 2px; min-width: 26px; padding-top: 1px; }
+  .vup { font-size: 13px; color: #3a3d42; cursor: pointer; line-height: 1; user-select: none; transition: color 0.1s; }
+  .vup:hover { color: #5b8dee; }
+  .vup.voted { color: #5b8dee; }
+  .vscore { font-size: 11px; font-weight: 700; color: #8a9ab0; font-family: 'JetBrains Mono', monospace; text-align: center; min-width: 26px; }
+  .vscore.hot { color: #e06c4a; }
+  .pbody { flex: 1; min-width: 0; }
+  .pmeta-top { display: flex; align-items: center; gap: 6px; margin-bottom: 4px; flex-wrap: wrap; }
+  .av { width: 18px; height: 18px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 8px; font-weight: 700; flex-shrink: 0; font-family: 'JetBrains Mono', monospace; }
+  .uname { font-size: 11px; font-weight: 600; color: #7a9ec0; font-family: 'JetBrains Mono', monospace; cursor: pointer; }
+  .uname:hover { color: #5b8dee; text-decoration: underline; }
+  .dot { color: #2a2d33; font-size: 10px; }
+  .ts { font-size: 10px; color: #3a3d42; }
+  .flair { font-size: 9px; padding: 1px 5px; border-radius: 3px; font-family: 'JetBrains Mono', monospace; font-weight: 600; cursor: pointer; }
+  .fl-rant { background: #2a0a0a; color: #e06c4a; }
+  .fl-ask { background: #0a2a1a; color: #4caf74; }
+  .fl-show { background: #0a1a2a; color: #5b8dee; }
+  .fl-rust { background: #2a1a0a; color: #e06c4a; }
+  .fl-sec { background: #0a1a2a; color: #5b8dee; }
+  .fl-ml { background: #1a0a2a; color: #9b6ee8; }
+  .fl-dev { background: #1a1a1a; color: #8a9ab0; }
+  .fl-js { background: #2a2a0a; color: #d4ac30; }
+  .fl-hiring { background: #0a2a1a; color: #4caf74; }
+  .ptitle { font-size: 13px; font-weight: 600; color: #cdd6e0; line-height: 1.4; margin-bottom: 4px; }
+  .psnip { font-size: 11px; color: #5a6270; line-height: 1.5; margin-bottom: 6px; overflow: hidden; text-overflow: ellipsis; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
+  .pfoot { display: flex; align-items: center; gap: 10px; }
+  .paction { font-size: 10px; color: #3a3d42; cursor: pointer; font-family: 'JetBrains Mono', monospace; transition: color 0.1s; user-select: none; }
+  .paction:hover { color: #7a9ec0; }
+  .cat-tag { font-size: 9px; color: #3a4a5a; font-family: 'JetBrains Mono', monospace; padding: 1px 5px; border: 1px solid #1d2530; border-radius: 3px; cursor: pointer; }
+  .cat-tag:hover { border-color: #5b8dee; color: #5b8dee; }
+
+  /* SIDEBAR */
+  .side { padding: 12px; }
+  .side-lbl { font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: #3a3d42; font-family: 'JetBrains Mono', monospace; margin-bottom: 7px; }
+  .side-sec { margin-bottom: 14px; }
+  .side-user { display: flex; align-items: center; gap: 7px; padding: 5px 0; border-bottom: 1px solid #191b1f; cursor: pointer; }
+  .side-user:last-child { border-bottom: none; }
+  .side-user:hover .suname { color: #5b8dee; }
+  .sudot { width: 5px; height: 5px; border-radius: 50%; background: #4caf74; flex-shrink: 0; }
+  .suname { font-size: 11px; color: #7a9ec0; font-family: 'JetBrains Mono', monospace; flex: 1; transition: color 0.1s; }
+  .supts { font-size: 10px; color: #3a3d42; font-family: 'JetBrains Mono', monospace; }
+  .tag-cloud { display: flex; flex-wrap: wrap; gap: 4px; }
+  .tc { font-size: 9px; color: #4a5260; font-family: 'JetBrains Mono', monospace; padding: 2px 6px; border: 1px solid #1d1f23; border-radius: 3px; cursor: pointer; transition: all 0.1s; }
+  .tc:hover, .tc.active { border-color: #5b8dee; color: #5b8dee; background: #0d1a2a; }
+
+  /* FOOTER */
+  .ft { background: #0c0c0e; border-top: 1px solid #1d1f23; padding: 8px 14px; font-size: 10px; color: #2a2d33; text-align: center; font-family: 'JetBrains Mono', monospace; }
+  .ft a { color: #3a4a5a; text-decoration: none; cursor: pointer; }
+  .ft a:hover { color: #5b8dee; }
+
+  /* MODAL OVERLAY */
+  .overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 100; align-items: center; justify-content: center; }
+  .overlay.open { display: flex; }
+  .modal { background: #161b22; border: 1px solid #30363d; border-radius: 8px; padding: 24px; width: 360px; max-width: 95vw; position: relative; }
+  .modal h2 { font-family: 'JetBrains Mono', monospace; font-size: 14px; font-weight: 700; color: #e2e8f0; margin-bottom: 4px; }
+  .modal .sub { font-size: 11px; color: #4a5260; margin-bottom: 18px; font-family: 'JetBrains Mono', monospace; }
+  .modal label { display: block; font-size: 10px; color: #4a5260; font-family: 'JetBrains Mono', monospace; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px; margin-top: 12px; }
+  .modal input, .modal textarea, .modal select { width: 100%; background: #0c0c0e; border: 1px solid #21262d; border-radius: 4px; padding: 8px 10px; color: #c9d1d9; font-family: 'JetBrains Mono', monospace; font-size: 12px; outline: none; transition: border-color 0.15s; }
+  .modal input:focus, .modal textarea:focus, .modal select:focus { border-color: #5b8dee; }
+  .modal textarea { resize: vertical; min-height: 80px; }
+  .modal select option { background: #0c0c0e; }
+  .modal-btns { display: flex; gap: 8px; margin-top: 18px; }
+  .modal-submit { flex: 1; background: #5b8dee; border: none; border-radius: 4px; padding: 9px; color: #0c0c0e; font-family: 'JetBrains Mono', monospace; font-size: 12px; font-weight: 700; cursor: pointer; transition: background 0.15s; }
+  .modal-submit:hover { background: #4a7cdd; }
+  .modal-cancel { background: transparent; border: 1px solid #21262d; border-radius: 4px; padding: 9px 14px; color: #4a5260; font-family: 'JetBrains Mono', monospace; font-size: 12px; cursor: pointer; transition: border-color 0.15s; }
+  .modal-cancel:hover { border-color: #4a5260; color: #8a9ab0; }
+  .close-x { position: absolute; top: 12px; right: 14px; font-size: 16px; color: #4a5260; cursor: pointer; line-height: 1; font-family: 'JetBrains Mono', monospace; }
+  .close-x:hover { color: #8a9ab0; }
+  .modal-link { font-size: 11px; color: #5b8dee; cursor: pointer; text-align: center; margin-top: 12px; font-family: 'JetBrains Mono', monospace; }
+  .modal-link:hover { text-decoration: underline; }
+
+  /* TOAST */
+  .toast { position: fixed; bottom: 20px; right: 20px; background: #161b22; border: 1px solid #30363d; border-radius: 6px; padding: 10px 16px; font-family: 'JetBrains Mono', monospace; font-size: 11px; color: #c9d1d9; z-index: 200; transform: translateY(60px); opacity: 0; transition: all 0.25s; pointer-events: none; }
+  .toast.show { transform: translateY(0); opacity: 1; }
+  .toast.ok { border-left: 3px solid #4caf74; }
+  .toast.err { border-left: 3px solid #e06c4a; }
+
+  /* POST DETAIL */
+  .post-detail { padding: 16px 14px; }
+  .back-btn { font-size: 11px; color: #4a5260; font-family: 'JetBrains Mono', monospace; cursor: pointer; margin-bottom: 14px; display: inline-flex; align-items: center; gap: 5px; }
+  .back-btn:hover { color: #5b8dee; }
+  .post-full-title { font-size: 15px; font-weight: 700; color: #e2e8f0; line-height: 1.4; margin-bottom: 8px; }
+  .post-full-body { font-size: 12px; color: #8a9ab0; line-height: 1.7; margin-bottom: 14px; padding: 12px; background: #0e1012; border-radius: 4px; border: 1px solid #1d1f23; }
+  .comments-hdr { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: #3a3d42; font-family: 'JetBrains Mono', monospace; margin-bottom: 10px; padding-top: 14px; border-top: 1px solid #1d1f23; }
+  .comment { padding: 10px 0; border-bottom: 1px solid #191b1f; }
+  .comment:last-child { border-bottom: none; }
+  .comment-meta { display: flex; align-items: center; gap: 6px; margin-bottom: 5px; }
+  .comment-body { font-size: 12px; color: #8a9ab0; line-height: 1.6; }
+  .comment-input-row { display: flex; gap: 8px; margin-top: 12px; }
+  .comment-input-row input { flex: 1; background: #0c0c0e; border: 1px solid #21262d; border-radius: 4px; padding: 7px 10px; color: #c9d1d9; font-family: 'JetBrains Mono', monospace; font-size: 11px; outline: none; }
+  .comment-input-row input:focus { border-color: #5b8dee; }
+  .comment-input-row button { background: #1d2530; border: 1px solid #2d3a50; border-radius: 4px; padding: 7px 12px; color: #5b8dee; font-family: 'JetBrains Mono', monospace; font-size: 11px; cursor: pointer; white-space: nowrap; }
+  .comment-input-row button:hover { background: #253040; }
 </style>
 </head>
 <body>
-<div id="app">
-  <div id="header">
-    <svg width="40" height="40" viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg" style="flex-shrink:0">
-      <polygon points="22,5 27.2,16 38,16 29.5,22.5 32.5,34 22,27 11.5,34 14.5,22.5 6,16 16.8,16" fill="none" stroke="#c8922a" stroke-width="1.5"/>
-      <polygon points="22,39 16.8,28 6,28 14.5,21.5 11.5,10 22,17 32.5,10 29.5,21.5 38,28 27.2,28" fill="none" stroke="#f2d27a" stroke-width="1" opacity="0.4"/>
-    </svg>
-    <div id="header-text">
-      <h1>HaCham - Jewish Knowledge</h1>
-      <p>Torah · Talmud · History · Traditions · Literature · Trivia</p>
-    </div>
-  </div>
 
-  <div id="chat-area">
-    <div class="msg ai">
-      <div class="avatar ai">&#10017;</div>
-      <div class="bubble ai">Shalom! I'm <em>HaCham</em> (Hebrew for "the wise one"). Ask me anything about Jewish life, history, or learning.<br><br>Torah, Talmud, Kabbalah, holidays, Yiddish literature, Israeli history, fun trivia... all of it. <em>Nu</em>, what's on your mind?</div>
-    </div>
-  </div>
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
 
-  <div id="bottom">
-    <div id="suggestions">
-      <div class="chip" onclick="sendChip(this)">What is the Talmud?</div>
-      <div class="chip" onclick="sendChip(this)">Give me a fun Jewish trivia fact</div>
-      <div class="chip" onclick="sendChip(this)">What are the 613 mitzvot?</div>
-      <div class="chip" onclick="sendChip(this)">History of Passover</div>
-      <div class="chip" onclick="sendChip(this)">Who was Rambam?</div>
-      <div class="chip" onclick="sendChip(this)">Explain Kabbalah</div>
+<!-- LOGIN MODAL -->
+<div class="overlay" id="modal-login">
+  <div class="modal">
+    <span class="close-x" onclick="closeModal('login')">✕</span>
+    <h2>welcome back</h2>
+    <div class="sub">// login to nsco.dev</div>
+    <label>username</label>
+    <input type="text" id="login-user" placeholder="your_handle" autocomplete="username">
+    <label>password</label>
+    <input type="password" id="login-pass" placeholder="••••••••" autocomplete="current-password">
+    <div class="modal-btns">
+      <button class="modal-cancel" onclick="closeModal('login')">cancel</button>
+      <button class="modal-submit" onclick="doLogin()">login →</button>
     </div>
-    <div id="input-row">
-      <textarea id="user-input" placeholder="Ask about Torah, Talmud, Jewish history, holidays, literature..." rows="1"></textarea>
-      <button id="send-btn" onclick="handleSend()" aria-label="Send">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#0d0500" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
-      </button>
-    </div>
-    <div id="footer-note">Powered by GPT-4o. For serious halachic questions, ask a rabbi.</div>
+    <div class="modal-link" onclick="switchModal('login','register')">no account? register here</div>
   </div>
 </div>
 
+<!-- REGISTER MODAL -->
+<div class="overlay" id="modal-register">
+  <div class="modal">
+    <span class="close-x" onclick="closeModal('register')">✕</span>
+    <h2>create account</h2>
+    <div class="sub">// join nsco.dev</div>
+    <label>username</label>
+    <input type="text" id="reg-user" placeholder="your_handle" autocomplete="username">
+    <label>email</label>
+    <input type="email" id="reg-email" placeholder="you@example.com" autocomplete="email">
+    <label>password</label>
+    <input type="password" id="reg-pass" placeholder="••••••••" autocomplete="new-password">
+    <div class="modal-btns">
+      <button class="modal-cancel" onclick="closeModal('register')">cancel</button>
+      <button class="modal-submit" onclick="doRegister()">register →</button>
+    </div>
+    <div class="modal-link" onclick="switchModal('register','login')">already have an account? login</div>
+  </div>
+</div>
+
+<!-- NEW POST MODAL -->
+<div class="overlay" id="modal-post">
+  <div class="modal" style="width:440px;">
+    <span class="close-x" onclick="closeModal('post')">✕</span>
+    <h2>new thread</h2>
+    <div class="sub">// post to nsco.dev</div>
+    <label>title</label>
+    <input type="text" id="post-title" placeholder="what's on your mind?">
+    <label>body</label>
+    <textarea id="post-body" placeholder="details, context, links..."></textarea>
+    <label>category</label>
+    <select id="post-cat">
+      <option value="feed">feed</option>
+      <option value="ask">ask</option>
+      <option value="show">show</option>
+      <option value="jobs">jobs</option>
+    </select>
+    <label>flair</label>
+    <select id="post-flair">
+      <option value="ask">ask</option>
+      <option value="rant">rant</option>
+      <option value="show">show</option>
+      <option value="rust">rust</option>
+      <option value="js">js</option>
+      <option value="devops">devops</option>
+      <option value="sec">security</option>
+      <option value="ml">ml</option>
+      <option value="hiring">hiring</option>
+    </select>
+    <div class="modal-btns">
+      <button class="modal-cancel" onclick="closeModal('post')">cancel</button>
+      <button class="modal-submit" onclick="submitPost()">post →</button>
+    </div>
+  </div>
+</div>
+
+<!-- PAGE -->
+<div class="topbar">
+  <span class="g" id="online-count">● 1,847 online</span>
+  <span class="mono">nsco.dev</span>
+  <span id="topbar-user" style="color:#3a3d42;">not logged in</span>
+</div>
+
+<div class="hdr">
+  <div style="cursor:pointer" onclick="goHome()">
+    <div class="logo mono">nsco<span>.dev</span></div>
+    <div class="tagline">// tech talk, no fluff</div>
+  </div>
+  <div class="hdr-r" id="hdr-btns">
+    <button class="btn-s" onclick="openModal('login')">login</button>
+    <button class="btn-accent" onclick="openModal('register')">register</button>
+  </div>
+</div>
+
+<div class="nav" id="nav">
+  <div class="nt a" data-tab="feed">feed</div>
+  <div class="nt" data-tab="ask">ask</div>
+  <div class="nt" data-tab="show">show</div>
+  <div class="nt" data-tab="jobs">jobs</div>
+</div>
+
+<div class="sbr">
+  <div class="sb"><div class="sn" id="stat-users">94K</div><div class="sl">users</div></div>
+  <div class="sb"><div class="sn" id="stat-posts">1.2M</div><div class="sl">posts</div></div>
+  <div class="sb"><div class="sn">48K</div><div class="sl">threads</div></div>
+  <div class="sb"><div class="sn" id="stat-online">1,847</div><div class="sl">online</div></div>
+</div>
+
+<div class="main">
+  <div class="feed" id="feed-col">
+
+    <div id="tab-feed">
+      <div class="feed-hdr">
+        <div class="fh-tabs">
+          <div class="fh a" data-sort="hot">hot</div>
+          <div class="fh" data-sort="new">new</div>
+          <div class="fh" data-sort="top">top</div>
+        </div>
+        <button class="new-post-btn" onclick="requireAuth(()=>openPostModal('feed'))">+ new thread</button>
+      </div>
+      <div id="feed-posts"></div>
+    </div>
+
+    <div id="tab-ask" style="display:none">
+      <div class="feed-hdr">
+        <span style="font-size:11px;color:#4a5260;font-family:'JetBrains Mono',monospace;">questions from the community</span>
+        <button class="new-post-btn" onclick="requireAuth(()=>openPostModal('ask'))">+ ask something</button>
+      </div>
+      <div id="ask-posts"></div>
+    </div>
+
+    <div id="tab-show" style="display:none">
+      <div class="feed-hdr">
+        <span style="font-size:11px;color:#4a5260;font-family:'JetBrains Mono',monospace;">things people built</span>
+        <button class="new-post-btn" onclick="requireAuth(()=>openPostModal('show'))">+ show something</button>
+      </div>
+      <div id="show-posts"></div>
+    </div>
+
+    <div id="tab-jobs" style="display:none">
+      <div class="feed-hdr">
+        <span style="font-size:11px;color:#4a5260;font-family:'JetBrains Mono',monospace;">open roles — posted by members</span>
+        <button class="new-post-btn" onclick="requireAuth(()=>openPostModal('jobs'))">+ post role</button>
+      </div>
+      <div id="jobs-posts"></div>
+    </div>
+
+  </div>
+
+  <div class="side">
+    <div class="side-sec">
+      <div class="side-lbl">online now</div>
+      <div id="online-users">
+        <div class="side-user" onclick="showToast('viewing xor_overflow\\'s profile', 'ok')"><div class="sudot"></div><span class="suname">xor_overflow</span><span class="supts">12.4k</span></div>
+        <div class="side-user" onclick="showToast('viewing segfault_vic\\'s profile', 'ok')"><div class="sudot"></div><span class="suname">segfault_vic</span><span class="supts">8.1k</span></div>
+        <div class="side-user" onclick="showToast('viewing nil_ptr\\'s profile', 'ok')"><div class="sudot"></div><span class="suname">nil_ptr</span><span class="supts">6.7k</span></div>
+        <div class="side-user" onclick="showToast('viewing tcp_karen\\'s profile', 'ok')"><div class="sudot"></div><span class="suname">tcp_karen</span><span class="supts">4.2k</span></div>
+        <div class="side-user" onclick="showToast('viewing ml_skeptic\\'s profile', 'ok')"><div class="sudot"></div><span class="suname">ml_skeptic</span><span class="supts">3.9k</span></div>
+        <div class="side-user" onclick="showToast('viewing _404found\\'s profile', 'ok')"><div class="sudot"></div><span class="suname">_404found</span><span class="supts">2.1k</span></div>
+        <div class="side-user" onclick="showToast('viewing heap_heretic\\'s profile', 'ok')"><div class="sudot"></div><span class="suname">heap_heretic</span><span class="supts">881</span></div>
+      </div>
+    </div>
+    <div class="side-sec">
+      <div class="side-lbl">popular tags</div>
+      <div class="tag-cloud" id="tag-cloud">
+        <div class="tc" data-tag="rust">rust</div>
+        <div class="tc" data-tag="k8s">k8s</div>
+        <div class="tc" data-tag="llm">llm</div>
+        <div class="tc" data-tag="go">go</div>
+        <div class="tc" data-tag="postgres">postgres</div>
+        <div class="tc" data-tag="ts">ts</div>
+        <div class="tc" data-tag="linux">linux</div>
+        <div class="tc" data-tag="wasm">wasm</div>
+        <div class="tc" data-tag="nix">nix</div>
+        <div class="tc" data-tag="sqlite">sqlite</div>
+        <div class="tc" data-tag="htmx">htmx</div>
+        <div class="tc" data-tag="zig">zig</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="ft">
+  <a onclick="showToast('rules: be cool, no spam, no drama', 'ok')">rules</a> ·
+  <a onclick="showToast('source: github.com/nsco-dev/nsco (fictional)', 'ok')">source</a> ·
+  <a onclick="showToast('rss feed: nsco.dev/rss.xml', 'ok')">rss</a> ·
+  <a onclick="showToast('api docs: nsco.dev/api/v1', 'ok')">api</a>
+</div>
+
 <script>
-let history = [];
-let busy = false;
+// ── STATE ────────────────────────────────────────────────
+let currentUser = null;
+let currentTab = 'feed';
+let currentSort = 'hot';
+let votedPosts = new Set();
+let activeTag = null;
 
-const chatArea = document.getElementById('chat-area');
-const input = document.getElementById('user-input');
-const btn = document.getElementById('send-btn');
+const flairClass = { rant:'fl-rant', ask:'fl-ask', show:'fl-show', rust:'fl-rust', sec:'fl-sec', ml:'fl-ml', devops:'fl-dev', js:'fl-js', hiring:'fl-hiring', security:'fl-sec' };
+const avatarColors = [
+  ['#1a2030','#79c0ff'],['#0d2a0d','#56d364'],['#1a0a2a','#9b6ee8'],
+  ['#2a1a00','#d29922'],['#0a1a2a','#5b8dee'],['#0a2a1a','#4caf74'],
+  ['#2a0a2a','#9b6ee8'],['#1a1a00','#d4ac30'],['#2a0a0a','#e06c4a']
+];
 
-input.addEventListener('keydown', e => {
-  if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); handleSend(); }
+// ── DATA ─────────────────────────────────────────────────
+const posts = {
+  feed: {
+    hot: [
+      { id:'f1', av:'xo', avc:0, user:'xor_overflow', ts:'14h', flair:'rant', score:4200, title:"spent 3 months rewriting our backend in Go. it's slower. i am begging you not to do this.", snip:"we had a perfectly fine Python service. p99 was 80ms. CTO read a blog post. you can see where this is going...", body:"Full story: we migrated 40k lines of Python to Go over Q3. Our hypothesis was 10x throughput gains. We got about 0.8x. Turns out the bottleneck was the database the whole time, not the language. Please read your flame graphs before doing rewrites.", comments:[{av:'np',avc:1,user:'nil_ptr',ts:'13h',body:"i feel this in my soul. we did the same with Java → Kotlin and our p99 got worse for a month"},{av:'ml',avc:2,user:'ml_skeptic',ts:'12h',body:"the real lesson: always profile before rewriting anything. ever."},{av:'tc',avc:4,user:'tcp_karen',ts:'11h',body:"did your CTO at least acknowledge the mistake or did they just start a new initiative"}], tag:'/devops', tags:['go','devops'] },
+      { id:'f2', av:'np', avc:1, user:'nil_ptr', ts:'6h', flair:'devops', score:2800, title:"ok so my dockerfile was 2.1GB and now it's 44MB, here's every dumb thing I was doing", snip:"not gonna gatekeep this. copying node_modules into the image, no .dockerignore, installing curl 'just in case'...", body:"Full breakdown in the thread. Key wins: multi-stage build saved 800MB, .dockerignore removed another 600MB, switching from ubuntu to alpine-slim saved the rest. The biggest surprise was how much dev tooling I was accidentally including.", comments:[{av:'rk',avc:3,user:'rustacean_kyle',ts:'5h',body:"the node_modules one gets everyone at least once. the trick is just to never look at your image size until you have to."},{av:'hh',avc:6,user:'heap_heretic',ts:'4h',body:"alpine also has musl instead of glibc which has bitten me a couple times with compiled deps, worth knowing"}], tag:'/devops', tags:['k8s','devops'] },
+      { id:'f3', av:'ml', avc:2, user:'ml_skeptic', ts:'2h', flair:'ask', score:941, title:"genuinely asking — has anyone's company actually gotten ROI from their LLM integration? real numbers only", snip:"i keep seeing 'we added AI to our product' posts but no one ever follows up with actual metrics.", body:"Not trying to be cynical, I just keep reading case studies that say things like 'improved productivity' without any actual numbers. If you've shipped something with an LLM in prod and have real metrics (cost, time saved, churn, conversion, whatever), I'd genuinely love to hear it.", comments:[{av:'sv',avc:5,user:'segfault_vic',ts:'1h',body:"yes — we added an LLM to our support flow, deflected 34% of tickets, saved ~$40k/mo in agent costs. not magic but very real."},{av:'xo',avc:0,user:'xor_overflow',ts:'45m',body:"ours mostly broke even. the AI feature got us press which got us customers. hard to attribute directly."}], tag:'/ai-ml', tags:['llm','ml'] },
+      { id:'f4', av:'rk', avc:3, user:'rustacean_kyle', ts:'5h', flair:'rust', score:788, title:"day 47 of learning Rust: I finally understand the borrow checker and I think it's actually right about everything", snip:"I was so mad at the compiler for weeks. turns out I was just writing bad code. humbling experience honestly...", body:"I kept fighting the borrow checker for a month straight. Today I realized the errors it was flagging were actual bugs I would have introduced. It's not that Rust is annoying — it's that Rust refuses to let you lie to yourself about ownership. This is a compliment.", comments:[{av:'ml',avc:2,user:'ml_skeptic',ts:'4h',body:"the click moment for me was understanding that the borrow checker is basically a proof system. once you see it that way the errors make total sense."},{av:'np',avc:1,user:'nil_ptr',ts:'3h',body:"took me about 3 months but yeah, now I feel blind when writing other languages"}], tag:'/rust', tags:['rust'] },
+      { id:'f5', av:'bc', avc:8, user:'borrow_checker', ts:'3h', flair:'ask', score:399, title:"what's a 'senior engineer' thing you learned embarrassingly late in your career?", snip:"mine was reading logs properly. like actually reading them. I was skimming for 4 years and just getting lucky...", body:"Mine: I spent 4 years skimming error logs and searching for keywords instead of reading them top to bottom. A senior eng on my team watched me debug once and just said 'read it'. Changed everything. What's yours?", comments:[{av:'tc',avc:4,user:'tcp_karen',ts:'2h',body:"that you can just... ask the person who wrote the code what it does. this sounds obvious but i spent years reverse engineering things i could have just emailed someone about."},{av:'sv',avc:5,user:'segfault_vic',ts:'2h',body:"git blame is not an accusation tool it is a research tool"},{av:'hh',avc:6,user:'heap_heretic',ts:'1h',body:"that 'done' and 'correct' are different things and sometimes 'done' is the right call"}], tag:'/ask', tags:['ask'] },
+    ],
+    new: [
+      { id:'n1', av:'tc', avc:4, user:'tcp_karen', ts:'12m', flair:'js', score:14, title:"roast my code: wrote a full auth system before realizing the library we use already does this", snip:"600 lines of JWT handling I did not need to write. I am posting this so someone else doesn't have to suffer...", body:"Genuinely thought I was being thorough. Built refresh tokens, rotation, blacklisting, the works. Told my tech lead I was almost done. He pointed me to the auth module in our framework that does all of this. It's been there since 2019. Sharing the code anyway in case it helps someone.", comments:[], tag:'/roast', tags:['js'] },
+      { id:'n2', av:'hh', avc:6, user:'heap_heretic', ts:'34m', flair:'rust', score:8, title:"anyone else just discovered that Rust's std::mem::swap exists and feeling a bit silly", snip:"i wrote a temp variable swap function from scratch twice before someone in #rust told me...", body:"In my defense it was very early in my Rust journey. In my prosecution: I used it in production code for two months.", comments:[], tag:'/rust', tags:['rust'] },
+      { id:'n3', av:'nf', avc:7, user:'_404found', ts:'1h', flair:'devops', score:31, title:"confession: I've been cat-ing files into kubectl apply for six months and only just learned about -f", snip:"it worked fine!! but apparently this is not the move...", body:"cat deployment.yaml | kubectl apply - is a completely valid way to do it, technically. But kubectl apply -f deployment.yaml exists and is the intended way. I don't know how to feel about this.", comments:[{av:'np',avc:1,user:'nil_ptr',ts:'45m',body:"useless use of cat is a proud unix tradition. you were in good company."}], tag:'/devops', tags:['k8s'] },
+    ],
+    top: [
+      { id:'t1', av:'xo', avc:0, user:'xor_overflow', ts:'2mo', flair:'rant', score:18300, title:"I interviewed 200 engineers last year. here's every mistake I saw repeatedly.", snip:"not a brag post, genuinely trying to help. the same stuff comes up over and over and nobody's saying it out loud...", body:"Long post, worth reading if you're job hunting. Top mistakes: narrating what you're doing instead of thinking out loud, not asking clarifying questions, giving up too fast, and not discussing tradeoffs. The biggest one: people solve a different problem than the one I asked.", comments:[{av:'sv',avc:5,user:'segfault_vic',ts:'2mo',body:"the 'solving the wrong problem' one is huge. I've watched smart people fail interviews because they assumed and charged ahead."},{av:'ml',avc:2,user:'ml_skeptic',ts:'1mo',body:"do you have thoughts on take-home projects vs. live coding? seems like a split in the industry right now."}], tag:'/ask', tags:['ask'] },
+      { id:'t2', av:'sv', avc:5, user:'segfault_vic', ts:'4mo', flair:'sec', score:11700, title:"how I found a critical auth bypass in a Fortune 500 app by just... reading the JS", snip:"full writeup, disclosed and patched. the vulnerability was embarrassingly simple and that's kind of the point...", body:"Full responsible disclosure writeup. Short version: the frontend was checking user roles before showing UI, but the API had no server-side auth check on the same endpoints. I found it by opening devtools. Took 20 minutes. Disclosed, patched, got a nice thank-you note.", comments:[{av:'rk',avc:3,user:'rustacean_kyle',ts:'4mo',body:"the classic 'security through obscurity' anti-pattern. the frontend check is for UX, not security."},{av:'bc',avc:8,user:'borrow_checker',ts:'3mo',body:"what was the disclosure process like? did they respond quickly?"}], tag:'/security', tags:['sec','linux'] },
+    ]
+  },
+  ask: [
+    { id:'a1', av:'bc', avc:8, user:'borrow_checker', ts:'3h', flair:'ask', score:399, title:"what's a 'senior engineer' thing you learned embarrassingly late in your career?", snip:"mine was reading logs properly. like actually reading them. I was skimming for 4 years and just getting lucky...", body:"Mine: I spent 4 years skimming error logs and searching for keywords instead of reading them top to bottom. Changed everything. What's yours?", comments:[{av:'tc',avc:4,user:'tcp_karen',ts:'2h',body:"that you can just ask the person who wrote the code what it does"},{av:'sv',avc:5,user:'segfault_vic',ts:'2h',body:"git blame is not an accusation tool it is a research tool"},{av:'hh',avc:6,user:'heap_heretic',ts:'1h',body:"that 'done' and 'correct' are different things"}], tag:'/ask', tags:['ask'] },
+    { id:'a2', av:'ml', avc:2, user:'ml_skeptic', ts:'2h', flair:'ask', score:941, title:"genuinely asking — has anyone's company actually gotten ROI from their LLM integration? real numbers only", snip:"i keep seeing 'we added AI to our product' posts but no one ever follows up with actual metrics.", body:"Not trying to be cynical, I just keep reading case studies that say things like 'improved productivity' without numbers.", comments:[{av:'sv',avc:5,user:'segfault_vic',ts:'1h',body:"yes — we deflected 34% of support tickets, saved ~$40k/mo"}], tag:'/ai-ml', tags:['llm'] },
+    { id:'a3', av:'pp', avc:8, user:'packet_rat', ts:'7h', flair:'ask', score:217, title:"is it ever worth writing your own ORM or am I coping", snip:"genuinely can't figure out if this is a skill issue or a real gap in the ecosystem for my use case...", body:"We have a somewhat unusual data access pattern (multi-tenant, per-tenant schemas, dynamic table names). Every ORM I've tried fights us constantly. Starting to wonder if a thin query builder is just more honest.", comments:[{av:'np',avc:1,user:'nil_ptr',ts:'6h',body:"if you know SQL well, sqlx (Go) or psycopg3 raw queries are genuinely fine and you stop fighting the abstraction"},{av:'xo',avc:0,user:'xor_overflow',ts:'5h',body:"we wrote our own for the same reason. 600 lines, 2 years in, zero regrets. the key is not trying to make it general"}], tag:'/ask', tags:['postgres','ask'] },
+    { id:'a4', av:'hh', avc:6, user:'heap_heretic', ts:'1d', flair:'ask', score:502, title:"how do you actually get good at reading other people's code? asking for a job that's 80% maintenance", snip:"I can write code fine. reading unfamiliar codebases makes me feel like I'm guessing constantly...", body:"Just took a job that's primarily maintaining a 10-year-old Rails app. I can write new code fine but understanding what's already there feels like archaeology. Looking for mental models, not just 'read it more'.", comments:[{av:'tc',avc:4,user:'tcp_karen',ts:'23h',body:"start with the tests if there are any — they describe intended behavior. if there are no tests, i'm sorry."},{av:'ml',avc:2,user:'ml_skeptic',ts:'22h',body:"follow the data. pick a model, trace where it's created, read, written, deleted. ignores everything else."}], tag:'/ask', tags:['ask'] },
+  ],
+  show: [
+    { id:'s1', av:'np', avc:1, user:'nil_ptr', ts:'1d', flair:'show', score:1100, title:"Show nsco: built a terminal-based Git diff viewer that actually explains what changed in plain english", snip:"uses a local LLM, runs fully offline, works on any repo. MIT licensed, links inside...", body:"Two weekends of work. It runs the diff through a local Llama 3 instance and writes a plain-english summary of what changed and why (based on surrounding code context). Works best on small-to-medium PRs. Repo in comments.", comments:[{av:'rk',avc:3,user:'rustacean_kyle',ts:'23h',body:"this is actually useful. been waiting for someone to build the local-first version of this."},{av:'bc',avc:8,user:'borrow_checker',ts:'22h',body:"what model size are you running? curious about performance on a M2 macbook"}], tag:'/show', tags:['llm','linux'] },
+    { id:'s2', av:'rk', avc:3, user:'rustacean_kyle', ts:'3d', flair:'show', score:876, title:"Show nsco: rewrote my personal site in plain HTML/CSS with zero dependencies and it's the fastest thing I've ever shipped", snip:"100 on lighthouse, 8kb total, deploys in 2 seconds. I forgot how good the web can be without a build step...", body:"No framework, no bundler, no build step. One HTML file, one CSS file, deployed to Cloudflare Pages. Lighthouse 100/100/100/100. The whole site is 8kb. I've been overthinking personal websites for a decade.", comments:[{av:'tc',avc:4,user:'tcp_karen',ts:'3d',body:"this is the way. I keep trying to convince people that the build tool is the problem not the solution and nobody listens."},{av:'sv',avc:5,user:'segfault_vic',ts:'2d',body:"the fact that a plain HTML site is a flex in 2024 says a lot"}], tag:'/show', tags:['htmx','wasm'] },
+    { id:'s3', av:'tc', avc:4, user:'tcp_karen', ts:'5d', flair:'show', score:643, title:"Show nsco: sqlite-backed personal finance tracker I built instead of paying $12/mo for YNAB", snip:"it's not pretty but it works and I own my data. sharing the schema and scripts if anyone wants a starting point...", body:"It's a Python CLI + SQLite file. I've been using it for 8 months, it does everything I need, and my financial data lives on my own machine. Schema and import scripts in the repo.", comments:[{av:'np',avc:1,user:'nil_ptr',ts:'5d',body:"sqlite is genuinely underrated for this kind of personal tooling. fast, no server, backups are just cp."},{av:'ml',avc:2,user:'ml_skeptic',ts:'4d',body:"have you ever lost data? curious about your backup story"}], tag:'/show', tags:['sqlite','linux'] },
+    { id:'s4', av:'sv', avc:5, user:'segfault_vic', ts:'1w', flair:'show', score:2300, title:"Show nsco: open source Cloudflare tunnel alternative I built out of frustration — 800 stars in 4 days", snip:"it does one thing. it does it well. no dashboard, no account required, one binary...", body:"I needed to expose a local port publicly for demos. Every existing solution wanted an account, a dashboard, or money. Mine is one Go binary, connects to a relay server I host, no account needed. MIT license.", comments:[{av:'rk',avc:3,user:'rustacean_kyle',ts:'1w',body:"this is exactly the kind of thing the open source ecosystem needs. one thing, done well, no bullshit."},{av:'bc',avc:8,user:'borrow_checker',ts:'6d',body:"have you thought about federation so people can self-host the relay too?"}], tag:'/show', tags:['go','linux'] },
+  ],
+  jobs: [
+    { id:'j1', av:'ad', avc:0, user:'admin_dex', ts:'2h', flair:'hiring', score:'', title:"[hiring] small fintech, 4-person eng team, looking for a backend engineer who likes Postgres and hates meetings", snip:"remote, competitive salary, no on-call, async-first culture. we actually read applications. no recruiter screen...", body:"We're a 12-person fintech, 4 engineers. We do payroll infrastructure. The work is boring in the best way — reliable, well-tested, occasionally interesting. Stack is Go + Postgres + Temporal. Fully remote, $140-180k, actual work-life balance.", comments:[{av:'pp',avc:8,user:'packet_rat',ts:'1h',body:"what does 'no on-call' mean in practice for a fintech? do you have SLAs?"}], tag:'$140-180k', tags:['go','postgres'] },
+    { id:'j2', av:'ml', avc:2, user:'ml_skeptic', ts:'1d', flair:'hiring', score:'', title:"[hiring] ML infra role — we run models in prod, not just in notebooks. experience with vLLM/triton a plus", snip:"yc-backed, series A. honest about where we are. GPU budget is real. looking for someone who's done this before...", body:"We're a YC W23 company. Our product is built on fine-tuned models we run ourselves. We need someone who can manage model serving infrastructure, optimize inference costs, and work closely with our research team. Remote-friendly, SF optional.", comments:[], tag:'$160-210k', tags:['llm','ml'] },
+    { id:'j3', av:'rk', avc:3, user:'rustacean_kyle', ts:'3d', flair:'ask', score:'', title:"[seeking] senior SWE, 8yrs exp, Rust/Go/Python — open to staff roles at companies that actually ship", snip:"currently at big co, tired of 6-month roadmaps for features that take a week to build. EU timezone. let's talk...", body:"Not actively looking but open to the right thing. I care about: shipping pace, small team, real impact, interesting technical problems. I don't care about: FAANG prestige, ping pong tables, equity at a company going nowhere. DM me.", comments:[{av:'sv',avc:5,user:'segfault_vic',ts:'2d',body:"have you looked at smaller infra/devtools companies? seems like a fit"}], tag:'open to offers', tags:['rust','go'] },
+    { id:'j4', av:'np', avc:1, user:'nil_ptr', ts:'5d', flair:'hiring', score:'', title:"[hiring] devtools startup — if you have opinions about DX and enjoy arguing about CLI ergonomics, you'll fit in", snip:"fully remote, open source-first company, everyone on the team contributes to the public repo. seed stage, equity...", body:"We're building developer tooling (can't say more publicly yet). The team is 3 engineers, we all contribute to our open source repo, and we care deeply about how tools feel to use. Seed stage so risk/reward applies. If that sounds good, let's talk.", comments:[], tag:'$120-160k', tags:['linux'] },
+  ]
+};
+
+// ── HELPERS ──────────────────────────────────────────────
+function showToast(msg, type='ok') {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'toast ' + type + ' show';
+  setTimeout(() => t.classList.remove('show'), 2500);
+}
+
+function openModal(name) {
+  document.getElementById('modal-' + name).classList.add('open');
+}
+function closeModal(name) {
+  document.getElementById('modal-' + name).classList.remove('open');
+}
+function switchModal(from, to) {
+  closeModal(from); openModal(to);
+}
+
+document.querySelectorAll('.overlay').forEach(el => {
+  el.addEventListener('click', e => { if (e.target === el) el.classList.remove('open'); });
 });
-input.addEventListener('input', () => {
-  input.style.height = 'auto';
-  input.style.height = Math.min(input.scrollHeight, 120) + 'px';
-});
 
-function addMsg(role, text) {
-  const wrap = document.createElement('div');
-  wrap.className = 'msg ' + (role === 'user' ? 'user' : 'ai');
-  const av = document.createElement('div');
-  av.className = 'avatar ' + (role === 'user' ? 'user' : 'ai');
-  av.textContent = role === 'user' ? 'You' : '\u2721';
-  const bubble = document.createElement('div');
-  bubble.className = 'bubble ' + (role === 'user' ? 'user' : 'ai');
-  bubble.innerHTML = text
-    .replace(/\u2014/g, ', ')
-    .replace(/ -- /g, ', ')
-    .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
-    .replace(/\*(.*?)\*/g, '<em>$1</em>')
-    .replace(/\n\n/g, '<br><br>')
-    .replace(/\n/g, '<br>');
-  wrap.appendChild(av);
-  wrap.appendChild(bubble);
-  chatArea.appendChild(wrap);
-  chatArea.scrollTop = chatArea.scrollHeight;
+function requireAuth(fn) {
+  if (currentUser) { fn(); } else { openModal('login'); showToast('login required', 'err'); }
 }
 
-function showTyping() {
-  const wrap = document.createElement('div');
-  wrap.className = 'msg ai'; wrap.id = 'typing-indicator';
-  const av = document.createElement('div');
-  av.className = 'avatar ai'; av.textContent = '\u2721';
-  const bubble = document.createElement('div');
-  bubble.className = 'bubble ai typing';
-  bubble.innerHTML = '<div class="dot"></div><div class="dot"></div><div class="dot"></div>';
-  wrap.appendChild(av); wrap.appendChild(bubble);
-  chatArea.appendChild(wrap);
-  chatArea.scrollTop = chatArea.scrollHeight;
+function doLogin() {
+  const u = document.getElementById('login-user').value.trim();
+  const p = document.getElementById('login-pass').value.trim();
+  if (!u || !p) { showToast('fill in both fields', 'err'); return; }
+  currentUser = u;
+  closeModal('login');
+  updateAuthUI();
+  showToast('welcome back, ' + u, 'ok');
 }
 
-function removeTyping() {
-  const t = document.getElementById('typing-indicator');
-  if (t) t.remove();
+function doRegister() {
+  const u = document.getElementById('reg-user').value.trim();
+  const e = document.getElementById('reg-email').value.trim();
+  const p = document.getElementById('reg-pass').value.trim();
+  if (!u || !e || !p) { showToast('fill in all fields', 'err'); return; }
+  if (!e.includes('@')) { showToast('invalid email', 'err'); return; }
+  currentUser = u;
+  closeModal('register');
+  updateAuthUI();
+  showToast('account created. welcome, ' + u, 'ok');
 }
 
-function sendChip(el) {
-  input.value = el.textContent;
-  handleSend();
-}
-
-async function handleSend() {
-  const text = input.value.trim();
-  if (!text || busy) return;
-  busy = true; btn.disabled = true;
-  input.value = ''; input.style.height = 'auto';
-  addMsg('user', text);
-  history.push({ role: 'user', content: text });
-  showTyping();
-
-  try {
-    const res = await fetch('/api/chat', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ messages: history })
-    });
-    const data = await res.json();
-    if (data.error) throw new Error(data.error);
-    removeTyping();
-    addMsg('ai', data.reply);
-    history.push({ role: 'assistant', content: data.reply });
-    if (history.length > 24) history = history.slice(-24);
-  } catch(e) {
-    removeTyping();
-    addMsg('ai', 'Oy vey, got an error: ' + e.message);
+function updateAuthUI() {
+  const el = document.getElementById('hdr-btns');
+  const tb = document.getElementById('topbar-user');
+  if (currentUser) {
+    el.innerHTML = `<span style="font-size:11px;color:#7a9ec0;font-family:'JetBrains Mono',monospace;cursor:pointer;" onclick="doLogout()">@${currentUser} [logout]</span>`;
+    tb.textContent = '@' + currentUser;
+    tb.style.color = '#4caf74';
+  } else {
+    el.innerHTML = `<button class="btn-s" onclick="openModal('login')">login</button><button class="btn-accent" onclick="openModal('register')">register</button>`;
+    tb.textContent = 'not logged in';
+    tb.style.color = '#3a3d42';
   }
-  busy = false; btn.disabled = false;
 }
+
+function doLogout() {
+  currentUser = null;
+  updateAuthUI();
+  showToast('logged out', 'ok');
+}
+
+// ── POST MODAL ───────────────────────────────────────────
+function openPostModal(cat) {
+  document.getElementById('post-cat').value = cat;
+  openModal('post');
+}
+
+function submitPost() {
+  const title = document.getElementById('post-title').value.trim();
+  const body = document.getElementById('post-body').value.trim();
+  const cat = document.getElementById('post-cat').value;
+  const flair = document.getElementById('post-flair').value;
+  if (!title) { showToast('title required', 'err'); return; }
+  const initials = currentUser.slice(0,2).toLowerCase();
+  const ac = avatarColors[Math.floor(Math.random() * avatarColors.length)];
+  const newPost = {
+    id: 'u' + Date.now(),
+    av: initials, avc: -1, avCustom: [ac[0], ac[1]],
+    user: currentUser, ts: 'just now', flair,
+    score: 1, title, snip: body.slice(0, 120) || '(no body)',
+    body, comments: [], tag: '/' + cat, tags: [flair]
+  };
+  if (cat === 'feed') {
+    posts.feed.new.unshift(newPost);
+    posts.feed.hot.unshift(newPost);
+  } else {
+    posts[cat].unshift(newPost);
+  }
+  closeModal('post');
+  document.getElementById('post-title').value = '';
+  document.getElementById('post-body').value = '';
+  setTab(cat);
+  if (cat === 'feed') setSort('new');
+  showToast('thread posted', 'ok');
+  document.getElementById('stat-posts').textContent = '1.2M+';
+}
+
+// ── RENDER ───────────────────────────────────────────────
+function getAv(p, idx) {
+  if (p.avCustom) return [p.avCustom[0], p.avCustom[1]];
+  const c = avatarColors[idx % avatarColors.length];
+  return [c[0], c[1]];
+}
+
+function renderScore(s) {
+  if (s === '' || s === undefined) return '—';
+  if (s >= 1000) return (s/1000).toFixed(1).replace('.0','') + 'k';
+  return String(s);
+}
+
+function renderPost(p, idx) {
+  const [avc, avt] = getAv(p, idx);
+  const sc = renderScore(p.score);
+  const hot = typeof p.score === 'number' && p.score > 500;
+  const voted = votedPosts.has(p.id);
+  return `<div class="post" id="post-${p.id}">
+    <div class="votes">
+      <div class="vup ${voted?'voted':''}" onclick="vote(event,'${p.id}')" title="upvote">▲</div>
+      <div class="vscore ${hot?'hot':''}" id="score-${p.id}">${sc}</div>
+    </div>
+    <div class="pbody" onclick="openPost('${p.id}')">
+      <div class="pmeta-top">
+        <div class="av" style="background:${avc};color:${avt};">${p.av}</div>
+        <span class="uname" onclick="event.stopPropagation();showToast('viewing @${p.user}\\'s profile','ok')">${p.user}</span>
+        <span class="dot">·</span>
+        <span class="ts">${p.ts} ago</span>
+        <span class="flair ${flairClass[p.flair]||'fl-dev'}">${p.flair}</span>
+      </div>
+      <div class="ptitle">${p.title}</div>
+      <div class="psnip">${p.snip}</div>
+      <div class="pfoot">
+        <span class="paction" onclick="event.stopPropagation();openPost('${p.id}')">💬 ${p.comments.length} comment${p.comments.length===1?'':'s'}</span>
+        <span class="paction" onclick="event.stopPropagation();sharePost('${p.id}')">⇄ share</span>
+        <span class="cat-tag" onclick="event.stopPropagation()">${p.tag}</span>
+      </div>
+    </div>
+  </div>`;
+}
+
+function renderList(postArr, containerId) {
+  const el = document.getElementById(containerId);
+  if (!postArr || postArr.length === 0) {
+    el.innerHTML = '<div style="padding:40px 14px;text-align:center;color:#3a3d42;font-family:\'JetBrains Mono\',monospace;font-size:12px;">no posts yet — be the first</div>';
+    return;
+  }
+  let filtered = postArr;
+  if (activeTag) filtered = postArr.filter(p => p.tags && p.tags.includes(activeTag));
+  if (filtered.length === 0) {
+    el.innerHTML = `<div style="padding:30px 14px;text-align:center;color:#3a3d42;font-family:'JetBrains Mono',monospace;font-size:12px;">no posts tagged #${activeTag}</div>`;
+    return;
+  }
+  el.innerHTML = filtered.map((p,i) => renderPost(p, i)).join('');
+}
+
+// ── VOTING ───────────────────────────────────────────────
+function vote(e, id) {
+  e.stopPropagation();
+  if (!currentUser) { openModal('login'); showToast('login to vote', 'err'); return; }
+  const post = findPost(id);
+  if (!post || typeof post.score !== 'number') return;
+  const btn = e.target;
+  const scoreEl = document.getElementById('score-' + id);
+  if (votedPosts.has(id)) {
+    votedPosts.delete(id);
+    post.score--;
+    btn.classList.remove('voted');
+    showToast('vote removed', 'ok');
+  } else {
+    votedPosts.add(id);
+    post.score++;
+    btn.classList.add('voted');
+    showToast('upvoted', 'ok');
+  }
+  scoreEl.textContent = renderScore(post.score);
+}
+
+function findPost(id) {
+  for (const cat of Object.keys(posts)) {
+    const list = Array.isArray(posts[cat]) ? posts[cat] : [...(posts[cat].hot||[]), ...(posts[cat].new||[]), ...(posts[cat].top||[])];
+    const p = list.find(x => x.id === id);
+    if (p) return p;
+  }
+  return null;
+}
+
+// ── SHARE ────────────────────────────────────────────────
+function sharePost(id) {
+  const url = window.location.href.split('?')[0] + '?post=' + id;
+  if (navigator.clipboard) {
+    navigator.clipboard.writeText(url).then(() => showToast('link copied', 'ok')).catch(() => showToast('nsco.dev/post/' + id, 'ok'));
+  } else {
+    showToast('nsco.dev/post/' + id, 'ok');
+  }
+}
+
+// ── POST DETAIL ──────────────────────────────────────────
+function openPost(id) {
+  const p = findPost(id);
+  if (!p) return;
+  const [avc, avt] = getAv(p, 0);
+  const commentHTML = p.comments.length ? p.comments.map((c,i) => {
+    const [cavc, cavt] = avatarColors[i % avatarColors.length];
+    return `<div class="comment">
+      <div class="comment-meta">
+        <div class="av" style="background:${cavc};color:${cavt};width:16px;height:16px;font-size:7px;">${c.av}</div>
+        <span class="uname" style="font-size:11px;">${c.user}</span>
+        <span class="dot">·</span><span class="ts">${c.ts} ago</span>
+      </div>
+      <div class="comment-body">${c.body}</div>
+    </div>`;
+  }).join('') : '<div style="color:#3a3d42;font-family:\'JetBrains Mono\',monospace;font-size:11px;padding:10px 0;">no comments yet</div>';
+
+  const feedCol = document.getElementById('feed-col');
+  feedCol.innerHTML = `
+    <div class="post-detail">
+      <div class="back-btn" onclick="goBack()">← back</div>
+      <div class="pmeta-top" style="margin-bottom:8px;">
+        <div class="av" style="background:${avc};color:${avt};">${p.av}</div>
+        <span class="uname">${p.user}</span>
+        <span class="dot">·</span><span class="ts">${p.ts} ago</span>
+        <span class="flair ${flairClass[p.flair]||'fl-dev'}">${p.flair}</span>
+      </div>
+      <div class="post-full-title">${p.title}</div>
+      <div class="post-full-body">${p.body}</div>
+      <div class="pfoot" style="margin-bottom:14px;">
+        <span class="paction" onclick="vote(event,'${p.id}');this.textContent='▲ '+(${p.score}+1)">▲ ${renderScore(p.score)}</span>
+        <span class="paction" onclick="sharePost('${p.id}')">⇄ share</span>
+        <span class="cat-tag">${p.tag}</span>
+      </div>
+      <div class="comments-hdr">${p.comments.length} comment${p.comments.length===1?'':'s'}</div>
+      <div id="comments-list">${commentHTML}</div>
+      <div class="comment-input-row">
+        <input type="text" id="comment-input" placeholder="${currentUser ? 'add a comment...' : 'login to comment'}">
+        <button onclick="submitComment('${p.id}')">post</button>
+      </div>
+    </div>`;
+}
+
+function submitComment(postId) {
+  if (!currentUser) { openModal('login'); showToast('login to comment', 'err'); return; }
+  const input = document.getElementById('comment-input');
+  const text = input.value.trim();
+  if (!text) return;
+  const p = findPost(postId);
+  if (!p) return;
+  const initials = currentUser.slice(0,2).toLowerCase();
+  p.comments.push({ av: initials, avc: 0, user: currentUser, ts: 'just now', body: text });
+  input.value = '';
+  const cl = document.getElementById('comments-list');
+  const ac = avatarColors[p.comments.length % avatarColors.length];
+  const newComment = `<div class="comment">
+    <div class="comment-meta">
+      <div class="av" style="background:${ac[0]};color:${ac[1]};width:16px;height:16px;font-size:7px;">${initials}</div>
+      <span class="uname" style="font-size:11px;">${currentUser}</span>
+      <span class="dot">·</span><span class="ts">just now ago</span>
+    </div>
+    <div class="comment-body">${text}</div>
+  </div>`;
+  cl.innerHTML += newComment;
+  showToast('comment posted', 'ok');
+}
+
+function goBack() {
+  setTab(currentTab);
+  if (currentTab === 'feed') setSort(currentSort);
+}
+
+function goHome() {
+  setTab('feed'); setSort('hot');
+}
+
+// ── TABS & SORT ──────────────────────────────────────────
+function setSort(sort) {
+  currentSort = sort;
+  document.querySelectorAll('.fh').forEach(el => el.classList.toggle('a', el.dataset.sort === sort));
+  renderList(posts.feed[sort], 'feed-posts');
+}
+
+function setTab(tab) {
+  currentTab = tab;
+  const feedCol = document.getElementById('feed-col');
+  // Restore original tab HTML if we were in post detail
+  if (!document.getElementById('tab-feed')) {
+    location.reload(); return;
+  }
+  ['feed','ask','show','jobs'].forEach(t => {
+    document.getElementById('tab-'+t).style.display = t === tab ? '' : 'none';
+  });
+  document.querySelectorAll('.nt').forEach(el => el.classList.toggle('a', el.dataset.tab === tab));
+  if (tab === 'feed') renderList(posts.feed[currentSort], 'feed-posts');
+  if (tab === 'ask') renderList(posts.ask, 'ask-posts');
+  if (tab === 'show') renderList(posts.show, 'show-posts');
+  if (tab === 'jobs') renderList(posts.jobs, 'jobs-posts');
+}
+
+// ── TAG FILTER ───────────────────────────────────────────
+document.getElementById('tag-cloud').addEventListener('click', e => {
+  const tc = e.target.closest('.tc');
+  if (!tc) return;
+  const tag = tc.dataset.tag;
+  if (activeTag === tag) {
+    activeTag = null;
+    tc.classList.remove('active');
+    showToast('filter cleared', 'ok');
+  } else {
+    document.querySelectorAll('.tc').forEach(t => t.classList.remove('active'));
+    activeTag = tag;
+    tc.classList.add('active');
+    showToast('filtering by #' + tag, 'ok');
+  }
+  if (currentTab === 'feed') renderList(posts.feed[currentSort], 'feed-posts');
+  else if (currentTab === 'ask') renderList(posts.ask, 'ask-posts');
+  else if (currentTab === 'show') renderList(posts.show, 'show-posts');
+  else if (currentTab === 'jobs') renderList(posts.jobs, 'jobs-posts');
+});
+
+// ── NAV ──────────────────────────────────────────────────
+document.getElementById('nav').addEventListener('click', e => {
+  const t = e.target.closest('.nt');
+  if (t) setTab(t.dataset.tab);
+});
+
+document.querySelector('.feed-hdr').addEventListener('click', e => {
+  const t = e.target.closest('.fh');
+  if (t && t.dataset.sort) setSort(t.dataset.sort);
+});
+
+// ── ONLINE COUNT FLICKER ────────────────────────────────
+setInterval(() => {
+  const base = 1847;
+  const n = base + Math.floor(Math.random() * 40 - 20);
+  document.getElementById('online-count').textContent = '● ' + n.toLocaleString() + ' online';
+  document.getElementById('stat-online').textContent = n.toLocaleString();
+}, 8000);
+
+// ── INIT ─────────────────────────────────────────────────
+setTab('feed');
 </script>
 </body>
 </html>
